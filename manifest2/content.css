@@ -1,0 +1,28 @@
+:root {
+    --yt-controls-extension-red: #ff0000;
+}
+
+#yt-controls-extension-container {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    box-sizing: border-box;
+    z-index: 100000;
+}
+
+#yt-controls-extension-time-slider {
+    width: 75%;
+}
+
+#yt-controls-extension-volume-slider {
+    width: 25%;
+}
+
+/* ::-moz-range-progress {
+    background: var(--yt-controls-extension-red);
+} */
