@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
-    "name": "shorts",
-    "description": "shorts",
+    "name": "Control YouTube Shorts",
+    "description": "Video controls for YouTube Shorts",
     "version": "0.2",
     "content_scripts": [
         {
@@ -18,5 +18,11 @@
     ],
     "permissions": [
         "storage"
-    ]
+    ],
+    "icons": {
+        "16": "16.png",
+        "48": "48.png",
+        "64": "64.png",
+        "128": "128.png"
+    }
 }

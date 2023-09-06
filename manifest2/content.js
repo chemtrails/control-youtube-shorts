@@ -1,100 +1,122 @@
-// location.href.match(/www.youtube.com\/shorts\/[A-Za-z0-9_-]{11}/) !== null
+const observer = new MutationObserver(onMutations),
+    container = document.createElement('div'),
+    timeSlider = document.createElement('input'),
+    volumeSlider = document.createElement('input');
 
-const container = document.createElement('div')
-const timeSlider = document.createElement('input')
-const volumeSlider = document.createElement('input')
+let currentVideo = null,
+    volume = 0.7,
+    attached = false,
+    playAfterSeek = false,
+    observing = false;
 
-let paused = true
-let volume
-let interval
-let shortsContainer
-let video
-let observer
+container.id = 'yt-controls-extension-container';
+timeSlider.id = 'yt-controls-extension-time-slider';
+volumeSlider.id = 'yt-controls-extension-volume-slider';
 
-main()
+timeSlider.type = volumeSlider.type = 'range';
 
-async function main() {
-    interval = setInterval(waitForVideo, 300)
-}
+timeSlider.min = 0;
+timeSlider.max = 100;
+timeSlider.step = 0.01;
+timeSlider.value = 0;
 
-async function attachControls() {
-    const settings = await browser.storage.local.get('volume')
-    volume = settings.volume ? settings.volume : 0.7
+volumeSlider.min = 0;
+volumeSlider.max = 1;
+volumeSlider.step = 0.01;
+volumeSlider.value = volume;
 
-    container.id = 'yt-controls-extension-container'
-    timeSlider.id = 'yt-controls-extension-time-slider'
-    volumeSlider.id = 'yt-controls-extension-volume-slider'
+container.append(timeSlider);
+container.append(volumeSlider);
 
-    timeSlider.type = 'range'
-    volumeSlider.type = 'range'
+browser.storage.local.get('volume').then(settings => {
+    if (settings.volume) {
+        volume = settings.volume;
+        volumeSlider.value = volume;
+    }
+});
 
-    shortsContainer.append(container)
-    container.append(timeSlider)
-    container.append(volumeSlider)
+observer.observe(document.body, { childList: true, subtree: true });
+observing = true;
+window.addEventListener('transitioncancel', onTransition);
 
-    timeSlider.min = 0
-    volumeSlider.min = 0
+timeSlider.addEventListener('mousedown', () => {
+    if (currentVideo.paused === false) playAfterSeek = true;
+    currentVideo.pause();
+});
 
-    timeSlider.max = 100
-    volumeSlider.max = 1
-    
-    volumeSlider.step = 0.01
-    
-    timeSlider.value = 0
-    volumeSlider.value = volume
+timeSlider.addEventListener('input', () => {
+    const t = currentVideo.duration * (parseFloat(timeSlider.value) / 100);
+    currentVideo.currentTime = t <= currentVideo.duration ? t : 0;
+});
 
-    video.volume = volume
+timeSlider.addEventListener('change', () => {
+    if (playAfterSeek === true) currentVideo.play();
+    currentVideo.focus();
+    playAfterSeek = false;
+});
 
-    observer = new MutationObserver(onVideoChange)
-    observer.observe(video, {attributeFilter: ['src']})
+volumeSlider.addEventListener('input', () => {
+    volume = volumeSlider.value;
+    currentVideo.volume = volume;
+});
 
-    volumeSlider.addEventListener('input', async () => {
-        volume = volumeSlider.value
-        video.volume = volumeSlider.value
-        await browser.storage.local.set({volume: volumeSlider.value})
-    })
+volumeSlider.addEventListener('change', () => {
+    browser.storage.local.set({ volume: volumeSlider.value });
+    currentVideo.focus();
+});
 
-    timeSlider.addEventListener('input', () => {
-        video.currentTime = video.duration * (timeSlider.value / 100)
-    })
+function attach() {
+    currentVideo.volume = volume;
+    currentVideo.addEventListener('loadedmetadata', () => currentVideo.volume = volume);
+    currentVideo.addEventListener('canplay', () => currentVideo.volume = volume);
+    currentVideo.addEventListener('play', () => currentVideo.volume = volume);
 
-    video.addEventListener('timeupdate', () => {
-        timeSlider.value = (video.currentTime / video.duration) * 100
-    })
-
-    video.addEventListener('canplay', () => video.volume = volume)
-    video.addEventListener('play', () => paused = false)
-    video.addEventListener('pause', () => paused = true)
-    volumeSlider.addEventListener('mouseup', () => video.focus())
-
-    timeSlider.addEventListener('mouseup', () => {
-        if (paused === false) video.play()
-        video.focus()
-    })
+    currentVideo.addEventListener('timeupdate', () => {
+        timeSlider.value = (currentVideo.currentTime / currentVideo.duration) * 100;
+    });
 
     document.addEventListener('keydown', e => {
-        if (e.key === 'ArrowRight') video.currentTime += video.duration / 10
-        else if (e.key === 'ArrowLeft') video.currentTime -= video.duration / 10
-    })
+        if (document.activeElement.tagName === 'INPUT' ||
+            document.activeElement.id === 'contenteditable-root') return;
+
+        if (e.key === 'ArrowRight') {
+            const t = currentVideo.currentTime + (currentVideo.duration / 50);
+            currentVideo.currentTime = t <= currentVideo.duration ? t : 0;
+        }
+
+        else if (e.key === 'ArrowLeft') currentVideo.currentTime -= currentVideo.duration / 50;
+    });
 }
 
-async function waitForVideo() {
-    shortsContainer = document.getElementById('shorts-container')
-    video = document.querySelector('video.video-stream.html5-main-video')
-    
-    if (video !== null && shortsContainer !== null) {
-        clearInterval(interval)
-        await attachControls()
+function onTransition(e) {
+    if (e.target.id !== 'progress') return;
+    const videoId = history.state?.endpoint?.reelWatchEndpoint?.videoId;
+
+    if (videoId === undefined && observing === true) {
+        observer.disconnect();
+        observing = false;
+    } else if (videoId !== undefined && observing === false) {
+        observer.observe(document.body, { childList: true, subtree: true });
+        observing = true;
     }
 }
 
-function onVideoChange(muts) {
-    if (muts[0].target.src === '') {
-        detachControls()
-        return
-    }
-}
+function onMutations() {
+    const video = document.querySelector('div#shorts-player > div.html5-video-container > video');
 
-function detachControls() {
-    container.remove()
+    if (video && currentVideo !== video) {
+        currentVideo = video;
+        attach();
+    }
+
+    else if (currentVideo) currentVideo.volume = volume;
+
+    if (attached === false) {
+        const shortsContainer = document.querySelector('#shorts-container');
+
+        if (shortsContainer !== null) {
+            shortsContainer.append(container);
+            attached = true;
+        }
+    }
 }

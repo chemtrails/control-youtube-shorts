@@ -1,28 +1,84 @@
-:root {
-    --yt-controls-extension-red: #ff0000;
-}
-
 #yt-controls-extension-container {
     position: absolute;
-    bottom: 0;
-    width: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    bottom: 2vh;
+    width: 80%;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 5px;
     box-sizing: border-box;
     z-index: 100000;
+    border-radius: 5px;
+    max-width: 600px;
+    min-width: 400px;
+    padding: 5px;
+    outline-width: 1px;
+    outline-style: solid;
+    outline-color: transparent;
+    transition: background 0.2s 0.1s, outline-color 0.2s 0.1s, backdrop-filter 0.1s 0.1s;
 }
 
-#yt-controls-extension-time-slider {
-    width: 75%;
+#yt-controls-extension-container:hover {
+    outline-color: grey;
+    backdrop-filter: blur(50px);
 }
 
-#yt-controls-extension-volume-slider {
+#yt-controls-extension-container:hover #yt-controls-extension-volume-slider{
+    opacity: 1;
     width: 25%;
 }
 
-/* ::-moz-range-progress {
-    background: var(--yt-controls-extension-red);
-} */
+#yt-controls-extension-container:hover #yt-controls-extension-time-slider{
+    width: 75%;
+}
+
+#yt-controls-extension-time-slider {
+    background: transparent;
+    width: 100%;
+    transition: width 0.2s 0.1s;
+}
+
+#yt-controls-extension-volume-slider {
+    opacity: 0;
+    background: transparent;
+    width: 0;
+    transition: width 0.2s 0.1s, opacity 0.2s 0.1s;
+}
+
+::-moz-range-thumb {
+    border-radius: 2px;
+    width: 5px;
+    height: 14px;
+    border: 2px solid black;
+    background: #2081ff;
+    opacity: 0;
+    border: none;
+    transition: opacity 0.2s 0.1s;
+}
+
+::-moz-range-progress {
+    border-radius: 10px 0 0 10px;
+    height: 5px;
+    background: #6ba4f0;
+    transition: height 0.2s 0.1s;
+}
+
+::-moz-range-track {
+    border-radius: 10px;
+    height: 5px;
+    outline: 1px solid grey;
+    background: transparent;
+    transition: height 0.2s 0.1s;
+}
+
+#yt-controls-extension-container:hover ::-moz-range-progress {
+    height: 10px;
+}
+
+#yt-controls-extension-container:hover ::-moz-range-track {
+    height: 7px;
+}
+
+#yt-controls-extension-container:hover ::-moz-range-thumb {
+    opacity: 1;
+}
