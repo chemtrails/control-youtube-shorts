@@ -9,9 +9,12 @@ let currentVideo = null,
     playAfterSeek = false,
     observing = false;
 
-container.id = 'yt-controls-extension-container';
-timeSlider.id = 'yt-controls-extension-time-slider';
-volumeSlider.id = 'yt-controls-extension-volume-slider';
+container.id = '__yt-controls-extension-container__';
+timeSlider.id = '__yt-controls-extension-time-slider__';
+volumeSlider.id = '__yt-controls-extension-volume-slider__';
+
+timeSlider.classList.add('__yt-controls-extension-input__');
+volumeSlider.classList.add('__yt-controls-extension-input__');
 
 timeSlider.type = volumeSlider.type = 'range';
 

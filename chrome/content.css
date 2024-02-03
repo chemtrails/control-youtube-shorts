@@ -1,4 +1,8 @@
-#yt-controls-extension-container {
+#progress-bar.ytd-reel-video-renderer {
+    display: none !important;
+}
+
+#__yt-controls-extension-container__ {
     position: absolute;
     bottom: 2vh;
     width: 80%;
@@ -8,7 +12,7 @@
     gap: 5px;
     box-sizing: border-box;
     z-index: 100000;
-    border-radius: 5px;
+    border-radius: 2px;
     max-width: 600px;
     min-width: 400px;
     padding: 5px;
@@ -18,67 +22,72 @@
     transition: background 0.2s 0.1s, outline-color 0.2s 0.1s, backdrop-filter 0.1s 0.1s;
 }
 
-#yt-controls-extension-container:hover {
+#__yt-controls-extension-container__:hover {
     outline-color: grey;
     backdrop-filter: blur(50px);
 }
 
-#yt-controls-extension-container:hover #yt-controls-extension-volume-slider{
+#__yt-controls-extension-container__:hover 
+#__yt-controls-extension-volume-slider__ {
     opacity: 1;
     width: 25%;
 }
 
-#yt-controls-extension-container:hover #yt-controls-extension-time-slider{
+#__yt-controls-extension-container__:hover 
+#__yt-controls-extension-time-slider__ {
     width: 75%;
 }
 
-#yt-controls-extension-time-slider {
+#__yt-controls-extension-time-slider__ {
     background: transparent;
     width: 100%;
     transition: width 0.2s 0.1s;
 }
 
-#yt-controls-extension-volume-slider {
+#__yt-controls-extension-volume-slider__ {
     opacity: 0;
     background: transparent;
     width: 0;
     transition: width 0.2s 0.1s, opacity 0.2s 0.1s;
 }
 
-::-moz-range-thumb {
-    border-radius: 2px;
-    width: 5px;
-    height: 14px;
+.__yt-controls-extension-input__::-moz-range-thumb {
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
     border: 2px solid black;
-    background: #2081ff;
+    background: #6ba4f0;
     opacity: 0;
     border: none;
     transition: opacity 0.2s 0.1s;
 }
 
-::-moz-range-progress {
-    border-radius: 10px 0 0 10px;
+.__yt-controls-extension-input__::-moz-range-progress {
+    border-radius: 2px 0 0 2px;
     height: 5px;
     background: #6ba4f0;
     transition: height 0.2s 0.1s;
 }
 
-::-moz-range-track {
-    border-radius: 10px;
+.__yt-controls-extension-input__::-moz-range-track {
+    border-radius: 2px;
     height: 5px;
     outline: 1px solid grey;
     background: transparent;
     transition: height 0.2s 0.1s;
 }
 
-#yt-controls-extension-container:hover ::-moz-range-progress {
+#__yt-controls-extension-container__:hover 
+.__yt-controls-extension-input__::-moz-range-progress {
     height: 10px;
 }
 
-#yt-controls-extension-container:hover ::-moz-range-track {
+#__yt-controls-extension-container__:hover 
+.__yt-controls-extension-input__::-moz-range-track {
     height: 7px;
 }
 
-#yt-controls-extension-container:hover ::-moz-range-thumb {
+#__yt-controls-extension-container__:hover 
+.__yt-controls-extension-input__::-moz-range-thumb {
     opacity: 1;
 }
