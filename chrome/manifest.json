@@ -16,6 +16,11 @@
             ]
         }
     ],
+    "action": {
+        "default_popup": "popup/popup.html",
+        "default_icon": "48.png",
+        "default_title": "Control YouTube Shorts"
+    },
     "permissions": [
         "storage"
     ],
@@ -24,5 +29,11 @@
         "48": "48.png",
         "64": "64.png",
         "128": "128.png"
-    }
+    },
+    "web_accessible_resources": [
+        {
+            "resources": ["48.png"],
+            "matches": ["<all_urls>"]
+        }
+    ]
 }
