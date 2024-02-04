@@ -51,7 +51,7 @@
     transition: width 0.2s 0.1s, opacity 0.2s 0.1s;
 }
 
-.__yt-controls-extension-input__::-moz-range-thumb {
+/* .__yt-controls-extension-input__::-moz-range-thumb {
     border-radius: 50%;
     width: 16px;
     height: 16px;
@@ -75,9 +75,9 @@
     outline: 1px solid grey;
     background: transparent;
     transition: height 0.2s 0.1s;
-}
+} */
 
-#__yt-controls-extension-container__:hover 
+/* #__yt-controls-extension-container__:hover 
 .__yt-controls-extension-input__::-moz-range-progress {
     height: 10px;
 }
@@ -90,4 +90,41 @@
 #__yt-controls-extension-container__:hover 
 .__yt-controls-extension-input__::-moz-range-thumb {
     opacity: 1;
+} */
+
+
+
+/* WEBKIT */
+
+#__yt-controls-extension-container__:hover 
+.__yt-controls-extension-input__::-webkit-slider-runnable-track {
+    height: 7px;
+}
+
+#__yt-controls-extension-container__:hover 
+.__yt-controls-extension-input__::-webkit-slider-thumb {
+    opacity: 1;
+}
+
+.__yt-controls-extension-input__::-webkit-slider-thumb {
+    position: relative;
+    top: -4px;
+    background: #6ba4f0;
+    opacity: 0;
+    transition: opacity 0.2s 0.1s;
+}
+
+.__yt-controls-extension-input__::-webkit-slider-runnable-track {
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 2px;
+    height: 5px;
+    /* outline: 1px solid grey; */
+    background: transparent;
+    cursor: pointer;
+    transition: height 0.2s 0.1s;
+}
+
+.__yt-controls-extension-input__ {
+    background: transparent;
 }
